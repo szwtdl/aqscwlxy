@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"github/szwtdl/aqscwlxy/types"
 	"io"
 	"math/rand"
 	"os"
@@ -26,6 +27,56 @@ func GetUuid(platformType string) string {
 	}
 	// 生成标准 UUID
 	return uuid.New().String()
+}
+
+// 转换字符串
+
+func ProcessString(input string) string {
+	switch input {
+	case "对":
+		return "A"
+	case "错":
+		return "B"
+	default:
+		return input
+	}
+}
+
+// 计算数量
+
+func CalculateQuantity(m []types.Exam, oValue int) int {
+	B := len(m)
+	C := oValue
+	if C == 0 || C == B {
+		return B - 2
+	} else if C-2 > B {
+		return B
+	} else {
+		return C - 2
+	}
+}
+
+// 获取题目
+
+func GetSubject(items []types.Exam) []map[string]string {
+	number := CalculateQuantity(items, len(items))
+	var i int = 0
+	var examList []map[string]string
+	// 重新排序
+	rand.Shuffle(len(items), func(i, j int) {
+		items[i], items[j] = items[j], items[i]
+	})
+	for _, exam := range items {
+		if i >= number {
+			break
+		}
+		examList = append(examList, map[string]string{
+			"id":    exam.Id,
+			"value": ProcessString(exam.BzAnswer),
+		})
+		i++
+	}
+	return examList
 }
 
 // FlattenDict 将嵌套字典展平
@@ -85,10 +136,8 @@ func GetSign(postData map[string]interface{}) string {
 	for _, key := range keys {
 		sortedValues.WriteString(cleanData[key])
 	}
-
 	// 拼接盐值
 	tmpSign := sortedValues.String() + "8d387869d4c9eb0fe3b338a8c096324e"
-
 	// 计算 MD5 哈希值
 	hash := md5.Sum([]byte(tmpSign))
 	return hex.EncodeToString(hash[:])
