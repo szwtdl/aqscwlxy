@@ -13,20 +13,23 @@ import (
 type HttpClient struct {
 	client  *http.Client
 	domain  string
+	header  map[string]string
 	cookies map[string]string
 }
 
-func NewClient() *HttpClient {
+func NewClient(domain string, header map[string]string) *HttpClient {
 	return &HttpClient{
 		client:  &http.Client{},
-		domain:  "https://gd.aqscwlxy.com/gd_api",
+		domain:  domain,
+		header:  header,
 		cookies: make(map[string]string),
 	}
 }
 
-func (h *HttpClient) DoPost(postUrl string, headers map[string]string, postData map[string]string) ([]byte, error) {
+func (h *HttpClient) DoPost(postUrl string, postData map[string]string) ([]byte, error) {
 	var data []byte
 	var err error
+	headers := h.GetHeader()
 	contentType, exists := headers["Content-Type"]
 	if !exists {
 		contentType = "application/json"
@@ -56,11 +59,12 @@ func (h *HttpClient) DoPost(postUrl string, headers map[string]string, postData 
 	return h.doRequest(req)
 }
 
-func (h *HttpClient) DoGet(url string, headers map[string]string) ([]byte, error) {
+func (h *HttpClient) DoGet(url string) ([]byte, error) {
 	req, err := http.NewRequest("GET", fmt.Sprintf("%s/%s", h.domain, url), nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request: %v", err)
 	}
+	headers := h.GetHeader()
 	for k, v := range headers {
 		req.Header.Set(k, v)
 	}
@@ -80,4 +84,20 @@ func (h *HttpClient) doRequest(req *http.Request) ([]byte, error) {
 		return nil, fmt.Errorf("failed to read response body: %v", err)
 	}
 	return body, nil
+}
+
+func (h *HttpClient) SetHeader(header map[string]string) {
+	h.header = header
+}
+
+func (h *HttpClient) GetHeader() map[string]string {
+	return h.header
+}
+
+func (h *HttpClient) SetCookies(cookies map[string]string) {
+	h.cookies = cookies
+}
+
+func (h *HttpClient) GetCookies() map[string]string {
+	return h.cookies
 }

@@ -8,7 +8,7 @@ import (
 
 // 人脸识别认证
 
-func AuthFace(client *utils.HttpClient, data map[string]string, header map[string]string) (types.ResponseApi, error) {
+func AuthFace(client *utils.HttpClient, data map[string]string) (types.ResponseApi, error) {
 	sign := utils.GetSign(map[string]interface{}{
 		"studyrecord_id":      data["record_id"],
 		"base64_image":        data["image"],
@@ -35,7 +35,7 @@ func AuthFace(client *utils.HttpClient, data map[string]string, header map[strin
 		"sign":                sign,
 		"token":               data["token"],
 	}
-	response, err := client.DoPost("study/face_auth.php", header, postData)
+	response, err := client.DoPost("study/face_auth.php", postData)
 	if err != nil {
 		return types.ResponseApi{}, err
 	}
@@ -49,7 +49,7 @@ func AuthFace(client *utils.HttpClient, data map[string]string, header map[strin
 
 // 实名认证
 
-func UploadFace(client *utils.HttpClient, data map[string]string, header map[string]string) (types.ResponseApi, error) {
+func UploadFace(client *utils.HttpClient, data map[string]string) (types.ResponseApi, error) {
 	postData := map[string]string{
 		"id":        data["user_id"],
 		"token":     data["token"],
@@ -62,7 +62,7 @@ func UploadFace(client *utils.HttpClient, data map[string]string, header map[str
 		"zx_code":   "",
 		"user_type": "1",
 	}
-	response, err := client.DoPost(fmt.Sprintf("send_check.php?t=%f", utils.GetRandomFloat()), header, postData)
+	response, err := client.DoPost(fmt.Sprintf("send_check.php?t=%f", utils.GetRandomFloat()), postData)
 	if err != nil {
 		return types.ResponseApi{}, err
 	}

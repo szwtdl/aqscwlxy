@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github/szwtdl/aqscwlxy/types"
 	"io"
+	"math"
 	"math/rand"
 	"os"
 	"sort"
@@ -286,4 +287,63 @@ func ImageToBase64(imagePath string) (string, error) {
 		return "", err
 	}
 	return base64.StdEncoding.EncodeToString(imageData), nil
+}
+
+func GenerateRules(duration int, spacing int, srDuration int, validPhotoTime bool, ruleType, action string) types.RulesData {
+	if spacing == 0 {
+		spacing = 900
+	}
+
+	rulesData := types.RulesData{
+		Rules:     []types.Rule{},
+		NextRule:  nil,
+		BeginTime: 0,
+		Index:     0,
+		Spacing:   spacing,
+	}
+
+	Ue := spacing
+	ot := duration
+	at := Ue
+	if ot < Ue {
+		at = ot
+	}
+
+	xt := srDuration
+	if xt == 0 {
+		xt = rand.Intn(at + 1)
+	}
+
+	Jt := int(math.Ceil(float64(ot) / float64(at)))
+	for Vt := 0; Vt <= Jt; Vt++ {
+		qn := xt + at*Vt
+		if qn > ot {
+			continue
+		}
+
+		rule := types.Rule{
+			Time:   qn,
+			Type:   ruleType,
+			Action: action,
+		}
+		rulesData.Rules = append(rulesData.Rules, rule)
+
+		if rulesData.NextRule == nil && qn > srDuration {
+			rulesData.Index = Vt
+			rulesData.NextRule = &rule
+		}
+	}
+
+	if xt == 0 {
+		rulesData.Index = 0
+		if len(rulesData.Rules) > 0 {
+			rulesData.NextRule = &rulesData.Rules[0]
+		}
+	}
+
+	if !validPhotoTime && rulesData.NextRule == nil && len(rulesData.Rules) > 0 {
+		rulesData.NextRule = &rulesData.Rules[0]
+	}
+
+	return rulesData
 }

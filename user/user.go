@@ -7,7 +7,7 @@ import (
 
 // 账号登录
 
-func Login(client *utils.HttpClient, data map[string]string, header map[string]string) (types.User, error) {
+func Login(client *utils.HttpClient, data map[string]string) (types.User, error) {
 	sign := utils.GetSign(map[string]interface{}{
 		"account_number": data["username"],
 		"password":       data["password"],
@@ -16,7 +16,7 @@ func Login(client *utils.HttpClient, data map[string]string, header map[string]s
 		"t":              data["timestamp"],
 		"imei":           data["imei"],
 	})
-	response, err := client.DoPost("login_account.php", header, map[string]string{
+	response, err := client.DoPost("login_account.php", map[string]string{
 		"account_number": data["username"],
 		"password":       data["password"],
 		"platform":       data["platform"],
@@ -43,7 +43,7 @@ func Login(client *utils.HttpClient, data map[string]string, header map[string]s
 
 // 检查是否认证,如果是302，代表需要认证
 
-func CheckAuth(client *utils.HttpClient, data map[string]string, header map[string]string) (types.ResponseApi, error) {
+func CheckAuth(client *utils.HttpClient, data map[string]string) (types.ResponseApi, error) {
 	sign := utils.GetSign(map[string]interface{}{
 		"platform": data["platform"],
 		"zx_code":  "",
@@ -60,7 +60,7 @@ func CheckAuth(client *utils.HttpClient, data map[string]string, header map[stri
 		"sign":     sign,
 		"token":    data["token"],
 	}
-	response, err := client.DoPost("user/check_user_auth.php", header, postData)
+	response, err := client.DoPost("user/check_user_auth.php", postData)
 	if err != nil {
 		return types.ResponseApi{}, err
 	}
@@ -74,7 +74,7 @@ func CheckAuth(client *utils.HttpClient, data map[string]string, header map[stri
 
 // 检查token，是否过期
 
-func CheckToken(client *utils.HttpClient, data map[string]string, header map[string]string) (types.ResponseApi, error) {
+func CheckToken(client *utils.HttpClient, data map[string]string) (types.ResponseApi, error) {
 	sign := utils.GetSign(map[string]interface{}{
 		"platform": data["platform"],
 		"zx_code":  "",
@@ -82,7 +82,7 @@ func CheckToken(client *utils.HttpClient, data map[string]string, header map[str
 		"imei":     data["imei"],
 		"t":        data["timestamp"],
 	})
-	response, err := client.DoPost("user/checkToken.php", header, map[string]string{
+	response, err := client.DoPost("user/checkToken.php", map[string]string{
 		"platform": data["platform"],
 		"zx_code":  "",
 		"id":       data["user_id"],

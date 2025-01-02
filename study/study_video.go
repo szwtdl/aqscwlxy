@@ -10,7 +10,7 @@ import (
 
 // 章节列表
 
-func ChapterList(client *utils.HttpClient, data map[string]string, header map[string]string) ([]types.Chapter, error) {
+func ChapterList(client *utils.HttpClient, data map[string]string) ([]types.Chapter, error) {
 	post := map[string]interface{}{
 		"platform":        data["platform"],
 		"zx_code":         "",
@@ -20,7 +20,7 @@ func ChapterList(client *utils.HttpClient, data map[string]string, header map[st
 		"imei":            data["imei"],
 	}
 	sign := utils.GetSign(post)
-	response, err := client.DoPost("study/study_video.php", header, map[string]string{
+	response, err := client.DoPost("study/study_video.php", map[string]string{
 		"platform":        data["platform"],
 		"zx_code":         "",
 		"id":              data["user_id"],
@@ -48,7 +48,7 @@ func ChapterList(client *utils.HttpClient, data map[string]string, header map[st
 
 // 章节详情
 
-func ChapterInfo(client *utils.HttpClient, data map[string]string, header map[string]string) (types.Section, error) {
+func ChapterInfo(client *utils.HttpClient, data map[string]string) (types.Section, error) {
 	post := map[string]interface{}{
 		"platform":        data["platform"],
 		"zx_code":         "",
@@ -58,7 +58,7 @@ func ChapterInfo(client *utils.HttpClient, data map[string]string, header map[st
 		"t":               data["timestamp"],
 	}
 	sign := utils.GetSign(post)
-	response, err := client.DoPost("study/study_video.php", header, map[string]string{
+	response, err := client.DoPost("study/study_video.php", map[string]string{
 		"platform":        data["platform"],
 		"zx_code":         "",
 		"id":              data["user_id"],
@@ -94,7 +94,7 @@ func ChapterInfo(client *utils.HttpClient, data map[string]string, header map[st
 
 // 需要考试的章节
 
-func NeedExamChapter(client *utils.HttpClient, data map[string]string, header map[string]string) (types.Section, error) {
+func NeedExamChapter(client *utils.HttpClient, data map[string]string) (types.Section, error) {
 	sign := utils.GetSign(map[string]interface{}{
 		"platform":        data["platform"],
 		"zx_code":         "",
@@ -103,7 +103,7 @@ func NeedExamChapter(client *utils.HttpClient, data map[string]string, header ma
 		"t":               data["timestamp"],
 		"imei":            data["imei"],
 	})
-	response, err := client.DoPost("study/study_video.php", header, map[string]string{
+	response, err := client.DoPost("study/study_video.php", map[string]string{
 		"platform":        data["platform"],
 		"zx_code":         "",
 		"classstudent_id": data["course_id"],
@@ -139,7 +139,7 @@ func NeedExamChapter(client *utils.HttpClient, data map[string]string, header ma
 
 // 题目列表
 
-func ExamList(client *utils.HttpClient, data map[string]string, header map[string]string) ([]types.Exam, error) {
+func ExamList(client *utils.HttpClient, data map[string]string) ([]types.Exam, error) {
 	post := map[string]interface{}{
 		"platform":       data["platform"],
 		"zx_code":        "",
@@ -149,7 +149,7 @@ func ExamList(client *utils.HttpClient, data map[string]string, header map[strin
 		"imei":           data["imei"],
 	}
 	sign := utils.GetSign(post)
-	response, err := client.DoPost("study/get_course_video_subject.php", header, map[string]string{
+	response, err := client.DoPost("study/get_course_video_subject.php", map[string]string{
 		"platform":       data["platform"],
 		"zx_code":        "",
 		"studyrecord_id": data["record_id"],
@@ -177,7 +177,7 @@ func ExamList(client *utils.HttpClient, data map[string]string, header map[strin
 
 // 提交题目
 
-func SubmitExam(client *utils.HttpClient, data map[string]string, header map[string]string) (types.ResponseApi, error) {
+func SubmitExam(client *utils.HttpClient, data map[string]string) (types.ResponseApi, error) {
 	sign := utils.GetSign(map[string]interface{}{
 		"studyrecord_id": data["record_id"],
 		"platform":       data["platform"],
@@ -210,7 +210,7 @@ func SubmitExam(client *utils.HttpClient, data map[string]string, header map[str
 		postData[fmt.Sprintf("data[%d][value]", i)] = item["value"]
 	}
 
-	response, err := client.DoPost("study/subject_complete.php", header, postData)
+	response, err := client.DoPost("study/subject_complete.php", postData)
 	if err != nil {
 		return types.ResponseApi{}, err
 	}
@@ -224,7 +224,7 @@ func SubmitExam(client *utils.HttpClient, data map[string]string, header map[str
 
 // 视频进度
 
-func SwitchVideo(client *utils.HttpClient, data map[string]string, header map[string]string) (types.ResponseApi, error) {
+func SwitchVideo(client *utils.HttpClient, data map[string]string) (types.ResponseApi, error) {
 	post := map[string]interface{}{
 		"studyrecord_id": data["record_id"],
 		"duration":       data["duration"],
@@ -235,7 +235,7 @@ func SwitchVideo(client *utils.HttpClient, data map[string]string, header map[st
 		"t":              data["timestamp"],
 	}
 	sign := utils.GetSign(post)
-	response, err := client.DoPost("study/study_video_file.php", header, map[string]string{
+	response, err := client.DoPost("study/study_video_file.php", map[string]string{
 		"studyrecord_id": data["record_id"],
 		"duration":       data["duration"],
 		"platform":       data["platform"],
@@ -259,7 +259,7 @@ func SwitchVideo(client *utils.HttpClient, data map[string]string, header map[st
 
 // 提交学习记录
 
-func SubmitRecord(client *utils.HttpClient, data map[string]string, header map[string]string) (types.ResponseApi, error) {
+func SubmitRecord(client *utils.HttpClient, data map[string]string) (types.ResponseApi, error) {
 	post := map[string]interface{}{
 		"platform":       data["platform"],
 		"zx_code":        "",
@@ -270,12 +270,76 @@ func SubmitRecord(client *utils.HttpClient, data map[string]string, header map[s
 		"t":              data["timestamp"],
 	}
 	sign := utils.GetSign(post)
-	response, err := client.DoPost("study/studyrecord.php", header, map[string]string{
+	response, err := client.DoPost("study/studyrecord.php", map[string]string{
 		"platform":       data["platform"],
 		"zx_code":        "",
 		"id":             data["user_id"],
 		"studyrecord_id": data["record_id"],
 		"sr_totalhour":   data["progress"],
+		"imei":           data["imei"],
+		"t":              data["timestamp"],
+		"sign":           sign,
+		"token":          data["token"],
+	})
+	if err != nil {
+		return types.ResponseApi{}, err
+	}
+	var responseApi types.ResponseApi
+	err = utils.JsonUnmarshal(response, &responseApi)
+	if err != nil {
+		return types.ResponseApi{}, err
+	}
+	return responseApi, nil
+}
+
+// 检查学习记录
+
+func CheckRecord(client *utils.HttpClient, data map[string]string) (types.ResponseApi, error) {
+	sign := utils.GetSign(map[string]interface{}{
+		"classstudent_id": data["course_id"],
+		"zx_code":         "",
+		"platform":        data["platform"],
+		"id":              data["user_id"],
+		"imei":            data["imei"],
+		"t":               data["timestamp"],
+	})
+	response, err := client.DoPost("study/studyrecord_check.php", map[string]string{
+		"classstudent_id": data["course_id"],
+		"zx_code":         "",
+		"platform":        data["platform"],
+		"id":              data["user_id"],
+		"imei":            data["imei"],
+		"t":               data["timestamp"],
+		"sign":            sign,
+		"token":           data["token"],
+	})
+	if err != nil {
+		return types.ResponseApi{}, err
+	}
+	var responseApi types.ResponseApi
+	err = utils.JsonUnmarshal(response, &responseApi)
+	if err != nil {
+		return types.ResponseApi{}, err
+	}
+	return responseApi, nil
+}
+
+// 检查人脸结果
+
+func RecordResult(client *utils.HttpClient, data map[string]string) (types.ResponseApi, error) {
+	sign := utils.GetSign(map[string]interface{}{
+		"studyrecord_id": data["record_id"],
+		"platform":       data["platform"],
+		"zx_code":        "",
+		"id":             data["user_id"],
+		"imei":           data["imei"],
+		"t":              data["timestamp"],
+	})
+	response, err := client.DoPost("study/studyrecord_result.php", map[string]string{
+		"studyrecord_id": data["record_id"],
+		"platform":       data["platform"],
+		"zx_code":        "",
+		"id":             data["user_id"],
 		"imei":           data["imei"],
 		"t":              data["timestamp"],
 		"sign":           sign,

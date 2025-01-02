@@ -7,15 +7,14 @@ import (
 	"github/szwtdl/aqscwlxy/utils"
 )
 
-var httpClient = utils.NewClient()
-var deviceImei = utils.GetUuid("2")
+var platformType = "1"
+var httpClient = utils.NewClient("https://gd.aqscwlxy.com/gd_api", map[string]string{
+	"Content-Type": "application/x-www-form-urlencoded",
+	"User-Agent":   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+})
+var deviceImei = utils.GetUuid(platformType)
 
 func main() {
-	header := map[string]string{
-		"Content-Type": "application/x-www-form-urlencoded",
-		"User-Agent":   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
-	}
-	platformType := "1"
 	loginPost := map[string]string{
 		"username":  "41142219890415121X",
 		"password":  "15121X",
@@ -23,12 +22,16 @@ func main() {
 		"timestamp": utils.GetReqTime(),
 		"imei":      deviceImei,
 	}
-	User, err := user.Login(httpClient, loginPost, header)
+	User, err := user.Login(httpClient, loginPost)
 	if err != nil {
-		println(err.Error())
+		fmt.Println(err.Error())
 		return
 	}
 	fmt.Println("登录账号:", User.Id, User.Name, User.Account, User.Token, deviceImei, utils.GetRandomFloat())
+	//干星魁 1ed3b577d06eb4d923a7c4de1b31ebe9 5148 17356976325041504794
+	//deviceImei = "17356976325041504794"
+	//Token := "1ed3b577d06eb4d923a7c4de1b31ebe9"
+	//UserId := "5148"
 	//postData := map[string]interface{}{
 	//	"studyrecord_id": "123",
 	//	"data": map[string]interface{}{
@@ -51,7 +54,7 @@ func main() {
 	//	"token":     User.Token,
 	//}
 	//// 验证是否第一次人脸
-	//response, err := user.CheckAuth(httpClient, checkPost, header)
+	//response, err := user.CheckAuth(httpClient, checkPost)
 	//if err != nil {
 	//	println(err.Error())
 	//	return
@@ -70,7 +73,7 @@ func main() {
 	//		"username": User.Account,
 	//		"image":    fmt.Sprintf("data:image/jpeg;base64,%s", image),
 	//		"imei":     deviceImei,
-	//	}, header)
+	//	})
 	//	if err != nil {
 	//		println(err.Error())
 	//		return
@@ -90,15 +93,16 @@ func main() {
 	//	"imei":      deviceImei,
 	//	"timestamp": utils.GetReqTime(),
 	//	"course_id": "240746",
-	//}, header)
+	//})
 	//if err != nil {
-	//	println(err.Error())
+	//	fmt.Println(err.Error())
 	//	return
 	//}
 	//if chapterInfo.StudyRecordId == "" {
 	//	fmt.Println("Chapter Info StudyRecordId is empty")
 	//	return
 	//}
+	//fmt.Println("Chapter Info:", chapterInfo.Name, chapterInfo.StudyRecordId, chapterInfo.SrDuration, chapterInfo.Duration, chapterInfo.SpeedOfProgress)
 	//switchVideo, err := study.SwitchVideo(httpClient, map[string]string{
 	//	"user_id":   User.Id,
 	//	"token":     User.Token,
@@ -106,26 +110,47 @@ func main() {
 	//	"imei":      deviceImei,
 	//	"timestamp": utils.GetReqTime(),
 	//	"record_id": chapterInfo.StudyRecordId,
-	//}, header)
+	//})
 	//if err != nil {
 	//	println(err.Error())
 	//	return
 	//}
-	//fmt.Println("切换视频状态:", switchVideo.Code)
+	//var data struct {
+	//	AuthFaceCount     int   `json:"auth_face_count"`
+	//	Duration          int   `json:"duration"`
+	//	ErrorCode         int   `json:"error_code"`
+	//	StudyRecordFaceId int64 `json:"studyrecord_face_id"`
+	//	StudyRecordId     int64 `json:"studyrecord_id"`
+	//}
+	//err = utils.JsonUnmarshal(utils.JsonMarshal(switchVideo.Data), &data)
+	//if err != nil {
+	//	println(err.Error())
+	//	return
+	//}
+	//duration, _ := strconv.Atoi(chapterInfo.Duration)
+	//srDuration, _ := strconv.Atoi(chapterInfo.SrDuration)
+	//fmt.Println("视频进度", srDuration, duration, chapterInfo.ValidphotoTime)
+	//items := utils.GenerateRules(duration, 900, data.Duration, false, "photo", "photo")
+	//fmt.Println(items)
+	////if items.Rules[items.Index].Time < srDuration {
+	////	items.Index++
+	////}
+	//fmt.Println("生成规则:", items.Rules[items.Index].Time, items.Rules[items.Index].Type)
+	//fmt.Println("切换视频状态:", switchVideo.Code, switchVideo.Msg, data.AuthFaceCount, data.Duration, data.ErrorCode, data.StudyRecordFaceId, data.StudyRecordId)
 	//progressTime, _ := strconv.Atoi(chapterInfo.SrDuration)
 	//duration, _ := strconv.Atoi(chapterInfo.Duration)
 	//fmt.Println("视频进度", progressTime, duration)
 	//// 睡眠5秒
 	//utils.Sleep(60)
 	//response, err := study.SubmitRecord(httpClient, map[string]string{
-	//	"user_id":   User.Id,
-	//	"token":     User.Token,
+	//	"user_id":   UserId,
+	//	"token":     Token,
 	//	"platform":  platformType,
 	//	"imei":      deviceImei,
 	//	"timestamp": utils.GetReqTime(),
 	//	"record_id": chapterInfo.StudyRecordId,
 	//	"progress":  strconv.Itoa(progressTime + 60),
-	//}, header)
+	//})
 	//if err != nil {
 	//	println(err.Error())
 	//	return
@@ -140,7 +165,7 @@ func main() {
 		"imei":      deviceImei,
 		"timestamp": utils.GetReqTime(),
 		"course_id": "240746",
-	}, header)
+	})
 	if err != nil {
 		println(err.Error())
 		return
@@ -154,7 +179,7 @@ func main() {
 		"imei":      deviceImei,
 		"timestamp": utils.GetReqTime(),
 		"record_id": section.StudyRecordId,
-	}, header)
+	})
 	if err != nil {
 		println(err.Error())
 		return
@@ -170,7 +195,7 @@ func main() {
 		"record_id": section.StudyRecordId,
 		"data":      string(utils.JsonMarshal(items)),
 	}
-	examBody, err := study.SubmitExam(httpClient, examPost, header)
+	examBody, err := study.SubmitExam(httpClient, examPost)
 	if err != nil {
 		println(err.Error())
 		return
@@ -184,7 +209,7 @@ func main() {
 	//	"timestamp": utils.GetReqTime(),
 	//}
 	//////获取课程列表
-	//courseList, err := org.CourseList(httpClient, coursePost, header)
+	//courseList, err := org.CourseList(httpClient, coursePost)
 	//if err != nil {
 	//	println(err.Error())
 	//	return
@@ -201,7 +226,7 @@ func main() {
 	//		"platform":  platformType,
 	//		"imei":      deviceImei,
 	//		"timestamp": utils.GetReqTime(),
-	//	}, header)
+	//	})
 	//	if err != nil {
 	//		println(err.Error())
 	//		return
