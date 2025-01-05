@@ -6,7 +6,81 @@ import (
 	"github/szwtdl/aqscwlxy/utils"
 )
 
-// 人脸识别认证
+// 返回待认证数据
+
+func DurationFace(client *utils.HttpClient, data map[string]string) (types.ResponseApi, error) {
+	sign := utils.GetSign(map[string]interface{}{
+		"studyrecord_id": data["record_id"],
+		"duration":       data["duration"],
+		"platform":       data["platform"],
+		"zx_code":        "",
+		"id":             data["user_id"],
+		"imei":           data["imei"],
+		"t":              data["timestamp"],
+	})
+	response, err := client.DoPost("face/launch_face_auth.php", map[string]string{
+		"studyrecord_id": data["record_id"],
+		"duration":       data["duration"],
+		"platform":       data["platform"],
+		"zx_code":        "",
+		"id":             data["user_id"],
+		"imei":           data["imei"],
+		"t":              data["timestamp"],
+		"sign":           sign,
+		"token":          data["token"],
+	})
+	if err != nil {
+		return types.ResponseApi{}, err
+	}
+	var responseApi types.ResponseApi
+	err = utils.JsonUnmarshal(response, &responseApi)
+	if err != nil {
+		return types.ResponseApi{}, err
+	}
+	return responseApi, nil
+}
+
+//  人脸认证
+
+func StudyFace(client *utils.HttpClient, data map[string]string) (types.ResponseApi, error) {
+	sign := utils.GetSign(map[string]interface{}{
+		"studyrecord_id":      data["record_id"],
+		"base64_image":        data["image"],
+		"duration":            data["duration"],
+		"studyrecord_face_id": data["face_id"],
+		"uuid":                "",
+		"zx_code":             "",
+		"platform":            data["platform"],
+		"id":                  data["user_id"],
+		"imei":                data["imei"],
+		"t":                   data["timestamp"],
+	})
+	response, err := client.DoPost("study/face_study.php", map[string]string{
+		"studyrecord_id":      data["record_id"],
+		"base64_image":        data["image"],
+		"duration":            data["duration"],
+		"studyrecord_face_id": data["face_id"],
+		"uuid":                "",
+		"zx_code":             "",
+		"platform":            data["platform"],
+		"id":                  data["user_id"],
+		"imei":                data["imei"],
+		"t":                   data["timestamp"],
+		"sign":                sign,
+		"token":               data["token"],
+	})
+	if err != nil {
+		return types.ResponseApi{}, err
+	}
+	var responseApi types.ResponseApi
+	err = utils.JsonUnmarshal(response, &responseApi)
+	if err != nil {
+		return types.ResponseApi{}, err
+	}
+	return responseApi, nil
+}
+
+// 首次认证头像
 
 func AuthFace(client *utils.HttpClient, data map[string]string) (types.ResponseApi, error) {
 	sign := utils.GetSign(map[string]interface{}{
@@ -21,7 +95,7 @@ func AuthFace(client *utils.HttpClient, data map[string]string) (types.ResponseA
 		"imei":                data["imei"],
 		"t":                   data["timestamp"],
 	})
-	postData := map[string]string{
+	response, err := client.DoPost("study/face_auth.php", map[string]string{
 		"studyrecord_id":      data["record_id"],
 		"base64_image":        data["image"],
 		"duration":            data["duration"],
@@ -34,8 +108,7 @@ func AuthFace(client *utils.HttpClient, data map[string]string) (types.ResponseA
 		"t":                   data["timestamp"],
 		"sign":                sign,
 		"token":               data["token"],
-	}
-	response, err := client.DoPost("study/face_auth.php", postData)
+	})
 	if err != nil {
 		return types.ResponseApi{}, err
 	}

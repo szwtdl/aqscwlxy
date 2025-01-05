@@ -260,22 +260,21 @@ func SwitchVideo(client *utils.HttpClient, data map[string]string) (types.Respon
 // 提交学习记录
 
 func SubmitRecord(client *utils.HttpClient, data map[string]string) (types.ResponseApi, error) {
-	post := map[string]interface{}{
+	sign := utils.GetSign(map[string]interface{}{
 		"platform":       data["platform"],
 		"zx_code":        "",
 		"id":             data["user_id"],
 		"studyrecord_id": data["record_id"],
-		"sr_totalhour":   data["progress"],
+		"sr_totalhour":   data["duration"],
 		"imei":           data["imei"],
 		"t":              data["timestamp"],
-	}
-	sign := utils.GetSign(post)
+	})
 	response, err := client.DoPost("study/studyrecord.php", map[string]string{
 		"platform":       data["platform"],
 		"zx_code":        "",
 		"id":             data["user_id"],
 		"studyrecord_id": data["record_id"],
-		"sr_totalhour":   data["progress"],
+		"sr_totalhour":   data["duration"],
 		"imei":           data["imei"],
 		"t":              data["timestamp"],
 		"sign":           sign,

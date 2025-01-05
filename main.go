@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github/szwtdl/aqscwlxy/study"
-	"github/szwtdl/aqscwlxy/user"
 	"github/szwtdl/aqscwlxy/utils"
 )
 
@@ -15,23 +14,23 @@ var httpClient = utils.NewClient("https://gd.aqscwlxy.com/gd_api", map[string]st
 var deviceImei = utils.GetUuid(platformType)
 
 func main() {
-	loginPost := map[string]string{
-		"username":  "41142219890415121X",
-		"password":  "15121X",
-		"platform":  platformType,
-		"timestamp": utils.GetReqTime(),
-		"imei":      deviceImei,
-	}
-	User, err := user.Login(httpClient, loginPost)
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-	fmt.Println("登录账号:", User.Id, User.Name, User.Account, User.Token, deviceImei, utils.GetRandomFloat())
-	//干星魁 1ed3b577d06eb4d923a7c4de1b31ebe9 5148 17356976325041504794
-	//deviceImei = "17356976325041504794"
-	//Token := "1ed3b577d06eb4d923a7c4de1b31ebe9"
-	//UserId := "5148"
+	//loginPost := map[string]string{
+	//	"username":  "41142219890415121X",
+	//	"password":  "15121X",
+	//	"platform":  platformType,
+	//	"timestamp": utils.GetReqTime(),
+	//	"imei":      deviceImei,
+	//}
+	//User, err := user.Login(httpClient, loginPost)
+	//if err != nil {
+	//	fmt.Println("登录失败:", err.Error())
+	//	return
+	//}
+	//fmt.Println("登录账号:", User.Id, User.Name, User.Account, User.Token, deviceImei, utils.GetRandomFloat())
+	// 干星魁 ab33a8ba3a60b2b99e690fdb71fa19ec 5148 41142219890415121X 17360861263604699005
+	UserId := "5148"
+	deviceImei = "17360861263604699005"
+	Token := "ab33a8ba3a60b2b99e690fdb71fa19ec"
 	//postData := map[string]interface{}{
 	//	"studyrecord_id": "123",
 	//	"data": map[string]interface{}{
@@ -86,23 +85,23 @@ func main() {
 	//	return
 	//}
 	//fmt.Println(response.Msg, response.Code)
-	//chapterInfo, err := study.ChapterInfo(httpClient, map[string]string{
-	//	"user_id":   User.Id,
-	//	"token":     User.Token,
-	//	"platform":  platformType,
-	//	"imei":      deviceImei,
-	//	"timestamp": utils.GetReqTime(),
-	//	"course_id": "240746",
-	//})
-	//if err != nil {
-	//	fmt.Println(err.Error())
-	//	return
-	//}
-	//if chapterInfo.StudyRecordId == "" {
-	//	fmt.Println("Chapter Info StudyRecordId is empty")
-	//	return
-	//}
-	//fmt.Println("Chapter Info:", chapterInfo.Name, chapterInfo.StudyRecordId, chapterInfo.SrDuration, chapterInfo.Duration, chapterInfo.SpeedOfProgress)
+	chapterInfo, err := study.ChapterInfo(httpClient, map[string]string{
+		"user_id":   UserId,
+		"token":     Token,
+		"platform":  platformType,
+		"imei":      deviceImei,
+		"timestamp": utils.GetReqTime(),
+		"course_id": "240746",
+	})
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	if chapterInfo.StudyRecordId == "" {
+		fmt.Println("章节信息为空")
+		return
+	}
+	fmt.Println("Chapter Info:", chapterInfo.Name, chapterInfo.StudyRecordId, chapterInfo.Duration, chapterInfo.SrDuration, chapterInfo.SpeedOfProgress)
 	//switchVideo, err := study.SwitchVideo(httpClient, map[string]string{
 	//	"user_id":   User.Id,
 	//	"token":     User.Token,
@@ -142,25 +141,78 @@ func main() {
 	//fmt.Println("视频进度", progressTime, duration)
 	//// 睡眠5秒
 	//utils.Sleep(60)
-	//response, err := study.SubmitRecord(httpClient, map[string]string{
+	//switchVideo, err := study.SwitchVideo(httpClient, map[string]string{
 	//	"user_id":   UserId,
 	//	"token":     Token,
 	//	"platform":  platformType,
 	//	"imei":      deviceImei,
 	//	"timestamp": utils.GetReqTime(),
 	//	"record_id": chapterInfo.StudyRecordId,
-	//	"progress":  strconv.Itoa(progressTime + 60),
+	//	"duration":  chapterInfo.SrDuration,
 	//})
 	//if err != nil {
 	//	println(err.Error())
 	//	return
 	//}
+	//fmt.Println("切换视频状态:", switchVideo.Code, switchVideo.Msg)
+	//responseRecord, err := study.SubmitRecord(httpClient, map[string]string{
+	//	"user_id":   UserId,
+	//	"token":     Token,
+	//	"platform":  platformType,
+	//	"imei":      deviceImei,
+	//	"timestamp": utils.GetReqTime(),
+	//	"record_id": chapterInfo.StudyRecordId,
+	//	"duration":  "360",
+	//})
+	//if err != nil {
+	//	println(err.Error())
+	//	return
+	//}
+	//fmt.Println("提交学习记录:", responseRecord.Code, responseRecord.Msg)
+	// TODO 提交学习进度
+	//response, err := face.DurationFace(httpClient, map[string]string{
+	//	"user_id":   UserId,
+	//	"token":     Token,
+	//	"platform":  platformType,
+	//	"imei":      deviceImei,
+	//	"timestamp": utils.GetReqTime(),
+	//	"record_id": chapterInfo.StudyRecordId,
+	//	"duration":  "1860",
+	//})
+	//if err != nil {
+	//	println(err.Error())
+	//	return
+	//}
+	//var faceDuration types.FaceDuration
 	//fmt.Println(response.Msg, response.Code)
-
+	//if response.Code == 208 {
+	//	if response.Msg == "该视频已看完，请按要求继续学习！" {
+	//		fmt.Println("视频已看完")
+	//		return
+	//	}
+	//	if response.Msg == "更新视频进度失败，认证图片为空！" {
+	//		fmt.Println("认证图片为空")
+	//		return
+	//	}
+	//	if response.Msg == "更新失败，非法提交学习进度，请刷新后重新观看！" {
+	//		fmt.Println("非法提交学习进度")
+	//		return
+	//	}
+	//}
+	//if response.Code == 301 {
+	//	fmt.Println("账号已退出登录")
+	//	return
+	//}
+	//err = utils.JsonUnmarshal(utils.JsonMarshal(response.Data), &faceDuration)
+	//if err != nil {
+	//	println(err.Error())
+	//	return
+	//}
+	//fmt.Println("人脸认证位置:", faceDuration.StudyRecordId, faceDuration.Duration, faceDuration.AuthFaceCount, faceDuration.IsVerification, faceDuration.StudyRecordFaceId)
 	// TODO 查询需要考试的章节
 	section, err := study.NeedExamChapter(httpClient, map[string]string{
-		"user_id":   User.Id,
-		"token":     User.Token,
+		"user_id":   UserId,
+		"token":     Token,
 		"platform":  platformType,
 		"imei":      deviceImei,
 		"timestamp": utils.GetReqTime(),
@@ -170,11 +222,15 @@ func main() {
 		println(err.Error())
 		return
 	}
+	if section.StudyRecordId == "" {
+		fmt.Println("章节信息为空")
+		return
+	}
 	fmt.Println("章节信息:", section.StudyRecordId, section.Name)
 	// 获取考试题目列表
 	examList, err := study.ExamList(httpClient, map[string]string{
-		"user_id":   User.Id,
-		"token":     User.Token,
+		"user_id":   UserId,
+		"token":     Token,
 		"platform":  platformType,
 		"imei":      deviceImei,
 		"timestamp": utils.GetReqTime(),
@@ -187,8 +243,8 @@ func main() {
 	// 声明一个切片，用于存储提交的题目
 	items := utils.GetSubject(examList)
 	examPost := map[string]string{
-		"user_id":   User.Id,
-		"token":     User.Token,
+		"user_id":   UserId,
+		"token":     Token,
 		"platform":  platformType,
 		"imei":      deviceImei,
 		"timestamp": utils.GetReqTime(),
@@ -200,7 +256,7 @@ func main() {
 		println(err.Error())
 		return
 	}
-	fmt.Println("提交题目结果:", examBody.Code, examBody.Msg)
+	fmt.Println("提交考试结果:", examBody.Code, examBody.Msg)
 	//coursePost := map[string]string{
 	//	"user_id":   User.Id,
 	//	"token":     User.Token,
