@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github/szwtdl/aqscwlxy/user"
-	"github/szwtdl/aqscwlxy/utils"
+	"github.com/szwtdl/aqscwlxy/user"
+	"github.com/szwtdl/aqscwlxy/utils"
 )
 
 var platformType = "1"
