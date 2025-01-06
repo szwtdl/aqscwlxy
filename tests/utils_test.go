@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github/szwtdl/aqscwlxy/utils"
+	"github.com/szwtdl/aqscwlxy/utils"
 )
 
 func TestUtils(t *testing.T) {

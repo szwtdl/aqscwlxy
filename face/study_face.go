@@ -2,8 +2,8 @@ package face
 
 import (
 	"fmt"
-	"github/szwtdl/aqscwlxy/types"
-	"github/szwtdl/aqscwlxy/utils"
+	"github.com/szwtdl/aqscwlxy/types"
+	"github.com/szwtdl/aqscwlxy/utils"
 )
 
 // 返回待认证数据

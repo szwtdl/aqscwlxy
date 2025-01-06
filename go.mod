@@ -1,4 +1,4 @@
-module github/szwtdl/aqscwlxy
+module github.com/szwtdl/aqscwlxy
 
 go 1.20
 

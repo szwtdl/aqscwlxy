@@ -6,7 +6,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"github/szwtdl/aqscwlxy/types"
+	"github.com/szwtdl/aqscwlxy/types"
 	"io"
 	"math"
 	"math/rand"

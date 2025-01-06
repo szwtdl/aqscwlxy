@@ -1,8 +1,8 @@
 package org
 
 import (
-	"github/szwtdl/aqscwlxy/types"
-	"github/szwtdl/aqscwlxy/utils"
+	"github.com/szwtdl/aqscwlxy/types"
+	"github.com/szwtdl/aqscwlxy/utils"
 )
 
 func CourseList(client *utils.HttpClient, data map[string]string) ([]types.Course, error) {
