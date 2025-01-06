@@ -3,6 +3,7 @@ package utils
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -49,7 +50,8 @@ func (h *HttpClient) DoPost(postUrl string, postData map[string]string) ([]byte,
 	default:
 		return nil, fmt.Errorf("unsupported Content-Type: %s", contentType)
 	}
-	req, err := http.NewRequest("POST", fmt.Sprintf("%s/%s", h.domain, postUrl), bytes.NewReader(data))
+	domain := h.GetDomain()
+	req, err := http.NewRequest("POST", fmt.Sprintf("%s/%s", domain, postUrl), bytes.NewReader(data))
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request: %v", err)
 	}
@@ -60,7 +62,8 @@ func (h *HttpClient) DoPost(postUrl string, postData map[string]string) ([]byte,
 }
 
 func (h *HttpClient) DoGet(url string) ([]byte, error) {
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/%s", h.domain, url), nil)
+	domain := h.GetDomain()
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/%s", domain, url), nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request: %v", err)
 	}
@@ -74,16 +77,24 @@ func (h *HttpClient) DoGet(url string) ([]byte, error) {
 func (h *HttpClient) doRequest(req *http.Request) ([]byte, error) {
 	res, err := h.client.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("failed to send request: %v", err)
+		return nil, errors.New(fmt.Sprintf("请求失败: %s", err.Error()))
 	}
 	defer func(Body io.ReadCloser) {
 		_ = Body.Close()
 	}(res.Body)
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return nil, fmt.Errorf("failed to read response body: %v", err)
+		return nil, errors.New(fmt.Sprintf("读取失败: %s", err.Error()))
 	}
 	return body, nil
+}
+
+func (h *HttpClient) SetDomain(domain string) {
+	h.domain = domain
+}
+
+func (h *HttpClient) GetDomain() string {
+	return h.domain
 }
 
 func (h *HttpClient) SetHeader(header map[string]string) {

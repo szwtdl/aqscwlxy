@@ -1,6 +1,7 @@
 package org
 
 import (
+	"errors"
 	"github.com/szwtdl/aqscwlxy/types"
 	"github.com/szwtdl/aqscwlxy/utils"
 )
@@ -40,9 +41,9 @@ func CourseList(client *utils.HttpClient, data map[string]string) ([]types.Cours
 
 // 课程详情
 
-func CourseInfo(client *utils.HttpClient, data map[string]string) (types.ResponseApi, error) {
+func CourseInfo(client *utils.HttpClient, data map[string]string) (types.CourseDetail, error) {
 	post := map[string]interface{}{
-		"platform":        data["username"],
+		"platform":        data["platform"],
 		"zx_code":         "",
 		"id":              data["user_id"],
 		"t":               data["timestamp"],
@@ -51,7 +52,7 @@ func CourseInfo(client *utils.HttpClient, data map[string]string) (types.Respons
 	}
 	sign := utils.GetSign(post)
 	response, err := client.DoPost("org_class/get_orgclass_info.php", map[string]string{
-		"platform":        data["username"],
+		"platform":        data["platform"],
 		"zx_code":         "",
 		"id":              data["user_id"],
 		"t":               data["timestamp"],
@@ -61,12 +62,20 @@ func CourseInfo(client *utils.HttpClient, data map[string]string) (types.Respons
 		"token":           data["token"],
 	})
 	if err != nil {
-		return types.ResponseApi{}, err
+		return types.CourseDetail{}, err
 	}
 	var responseApi types.ResponseApi
 	err = utils.JsonUnmarshal(response, &responseApi)
-	if err != nil {
-		return types.ResponseApi{}, err
+	if responseApi.Code != 200 {
+		return types.CourseDetail{}, errors.New(responseApi.Msg)
 	}
-	return responseApi, nil
+	if err != nil {
+		return types.CourseDetail{}, err
+	}
+	var courseDetail types.CourseDetail
+	err = utils.JsonUnmarshal(utils.JsonMarshal(responseApi.Data), &courseDetail)
+	if err != nil {
+		return types.CourseDetail{}, err
+	}
+	return courseDetail, nil
 }

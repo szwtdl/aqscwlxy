@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/szwtdl/aqscwlxy/org"
 	"github.com/szwtdl/aqscwlxy/user"
 	"github.com/szwtdl/aqscwlxy/utils"
 )
@@ -9,14 +10,14 @@ import (
 var platformType = "1"
 var httpClient = utils.NewClient("https://gd.aqscwlxy.com/gd_api", map[string]string{
 	"Content-Type": "application/x-www-form-urlencoded",
-	"User-Agent":   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+	"User-Agent":   "Mozilla/5.0 (Linux; U; Android 12.1.1; zh-cn; OPPO R9sk Build/NMF26F) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/70.0.3538.80 Mobile Safari/537.36 OppoBrowser/10.5.1.2",
 })
 var deviceImei = utils.GetUuid(platformType)
 
 func main() {
 	loginPost := map[string]string{
 		"username":  "41142219890415121X",
-		"password":  "Dp123456",
+		"password":  "Dp111111",
 		"platform":  platformType,
 		"timestamp": utils.GetReqTime(),
 		"imei":      deviceImei,
@@ -27,27 +28,41 @@ func main() {
 		return
 	}
 	fmt.Println("登录账号:", User.Id, User.Name, User.Account, User.Token, deviceImei, utils.GetRandomFloat())
-	response, err := user.ResetPass(httpClient, map[string]string{
-		"nickname":         User.Name,
-		"username":         User.Account,
-		"old_password":     "Dp123456",
-		"new_password":     "Dp111111",
-		"confirm_password": "Dp111111",
-		"platform":         platformType,
-		"user_id":          User.Id,
-		"imei":             deviceImei,
-		"timestamp":        utils.GetReqTime(),
-		"token":            User.Token,
+	response, err := org.CourseInfo(httpClient, map[string]string{
+		"platform":  platformType,
+		"user_id":   User.Id,
+		"timestamp": utils.GetReqTime(),
+		"imei":      deviceImei,
+		"course_id": "240746",
+		"token":     User.Token,
 	})
 	if err != nil {
-		fmt.Println("修改密码失败", err.Error())
+		fmt.Println(err.Error())
 		return
 	}
-	if response.Code != 200 {
-		fmt.Println("修改失败:", response.Msg)
-		return
-	}
-	fmt.Println(response.Msg, response.Code)
+	fmt.Println(response.CourseInfo.Name)
+
+	//response, err := user.ResetPass(httpClient, map[string]string{
+	//	"nickname":         User.Name,
+	//	"username":         User.Account,
+	//	"old_password":     "Dp123456",
+	//	"new_password":     "Dp111111",
+	//	"confirm_password": "Dp111111",
+	//	"platform":         platformType,
+	//	"user_id":          User.Id,
+	//	"imei":             deviceImei,
+	//	"timestamp":        utils.GetReqTime(),
+	//	"token":            User.Token,
+	//})
+	//if err != nil {
+	//	fmt.Println("修改密码失败", err.Error())
+	//	return
+	//}
+	//if response.Code != 200 {
+	//	fmt.Println("修改失败:", response.Msg)
+	//	return
+	//}
+	//fmt.Println(response.Msg, response.Code)
 	// 干星魁 be926e9b8be3dd705b05a686e406d8fc 5148 41142219890415121X 17360903201308881012
 	//UserId := "5148"
 	//deviceImei = "17360903201308881012"
@@ -107,8 +122,8 @@ func main() {
 	//}
 	//fmt.Println(response.Msg, response.Code)
 	//chapterInfo, err := study.ChapterInfo(httpClient, map[string]string{
-	//	"user_id":   UserId,
-	//	"token":     Token,
+	//	"user_id":   User.Id,
+	//	"token":     User.Token,
 	//	"platform":  platformType,
 	//	"imei":      deviceImei,
 	//	"timestamp": utils.GetReqTime(),
@@ -232,8 +247,8 @@ func main() {
 	//fmt.Println("人脸认证位置:", faceDuration.StudyRecordId, faceDuration.Duration, faceDuration.AuthFaceCount, faceDuration.IsVerification, faceDuration.StudyRecordFaceId)
 	// TODO 查询需要考试的章节
 	//section, err := study.NeedExamChapter(httpClient, map[string]string{
-	//	"user_id":   UserId,
-	//	"token":     Token,
+	//	"user_id":   User.Id,
+	//	"token":     User.Token,
 	//	"platform":  platformType,
 	//	"imei":      deviceImei,
 	//	"timestamp": utils.GetReqTime(),
@@ -250,8 +265,8 @@ func main() {
 	//fmt.Println("章节信息:", section.StudyRecordId, section.Name)
 	//// 获取考试题目列表
 	//examList, err := study.ExamList(httpClient, map[string]string{
-	//	"user_id":   UserId,
-	//	"token":     Token,
+	//	"user_id":   User.Id,
+	//	"token":     User.Token,
 	//	"platform":  platformType,
 	//	"imei":      deviceImei,
 	//	"timestamp": utils.GetReqTime(),
@@ -264,8 +279,8 @@ func main() {
 	//// 声明一个切片，用于存储提交的题目
 	//items := utils.GetSubject(examList)
 	//examPost := map[string]string{
-	//	"user_id":   UserId,
-	//	"token":     Token,
+	//	"user_id":   User.Id,
+	//	"token":     User.Token,
 	//	"platform":  platformType,
 	//	"imei":      deviceImei,
 	//	"timestamp": utils.GetReqTime(),

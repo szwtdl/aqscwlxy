@@ -39,6 +39,60 @@ type Course struct {
 	SpeedOfProgress    string `json:"speed_of_progress"`
 }
 
+type Teacher struct {
+	Id           string `json:"id"`
+	Avatar       string `json:"avatar"`
+	Content      string `json:"content"`
+	Name         string `json:"name"`
+	Introduction string `json:"introduction"`
+}
+
+type CourseInfo struct {
+	Id             string    `json:"id"`
+	AdminBannerUrl string    `json:"admin_banner_url"`
+	CoverPic       string    `json:"cover_pic"`
+	Name           string    `json:"name"`
+	Introduce      string    `json:"introduce"`
+	StuConclusion  string    `json:"stu_conclusion"`
+	StuContent     string    `json:"stu_content"`
+	StuPoint       string    `json:"stu_point"`
+	StuTarget      string    `json:"stu_target"`
+	TeacherId      string    `json:"teacher_id"`
+	TeacherList    []Teacher `json:"teacher_list"`
+}
+
+type CourseDetail struct {
+	Id                  string     `json:"id"`
+	Begintime           string     `json:"begintime"`
+	CourseId            string     `json:"course_id"`
+	CourseInfo          CourseInfo `json:"course_info"`
+	CourseVideoRule     string     `json:"course_video_rule"`
+	CoursevideoIds      string     `json:"coursevideo_ids"`
+	CumulativeDuration  string     `json:"cumulative_duration"`
+	Endtime             string     `json:"endtime"`
+	ExamCountDown       string     `json:"exam_count_down"`
+	Extend              string     `json:"extend"`
+	FaceCountDown       string     `json:"face_count_down"`
+	IsAuthFace          string     `json:"is_auth_face"`
+	IsAuthFaceMode      string     `json:"is_auth_face_mode"`
+	IsAuthFaceNum       string     `json:"is_auth_face_num"`
+	IsAuthSub           string     `json:"is_auth_sub"`
+	IsAuthSubNum        string     `json:"is_auth_sub_num"`
+	IsAuthSubUpdate     string     `json:"is_auth_sub_update"`
+	IsExam              string     `json:"is_exam"`
+	IsMultiplePlay      string     `json:"is_multiple_play"`
+	IsOnlineQuestions   string     `json:"is_online_questions"`
+	IsPayment           string     `json:"is_payment"`
+	IsPractice          string     `json:"is_practice"`
+	IsProgressDetection string     `json:"is_progress_detection"`
+	IsQuestionnaire     string     `json:"is_questionnaire"`
+	IsQuestionnaireType string     `json:"is_questionnaire_type"`
+	PaymentMoney        string     `json:"payment_money"`
+	PracticeAccuracy    string     `json:"practice_accuracy"`
+	QuestionnaireUrl    string     `json:"questionnaire_url"`
+	Status              string     `json:"status"`
+}
+
 type Section struct {
 	Id                  string `json:"id"`
 	Fid                 string `json:"fid"`
