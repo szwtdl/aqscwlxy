@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/szwtdl/aqscwlxy/org"
+	"github.com/szwtdl/aqscwlxy/study"
 	"github.com/szwtdl/aqscwlxy/user"
 	"github.com/szwtdl/aqscwlxy/utils"
 )
@@ -28,19 +28,19 @@ func main() {
 		return
 	}
 	fmt.Println("登录账号:", User.Id, User.Name, User.Account, User.Token, deviceImei, utils.GetRandomFloat())
-	response, err := org.CourseInfo(httpClient, map[string]string{
-		"platform":  platformType,
-		"user_id":   User.Id,
-		"timestamp": utils.GetReqTime(),
-		"imei":      deviceImei,
-		"course_id": "240746",
-		"token":     User.Token,
-	})
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-	fmt.Println(response.CourseInfo.Name)
+	//response, err := org.CourseInfo(httpClient, map[string]string{
+	//	"platform":  platformType,
+	//	"user_id":   User.Id,
+	//	"timestamp": utils.GetReqTime(),
+	//	"imei":      deviceImei,
+	//	"course_id": "245345",
+	//	"token":     User.Token,
+	//})
+	//if err != nil {
+	//	fmt.Println(err.Error())
+	//	return
+	//}
+	//fmt.Println(response.CourseInfo.Name)
 
 	//response, err := user.ResetPass(httpClient, map[string]string{
 	//	"nickname":         User.Name,
@@ -122,12 +122,12 @@ func main() {
 	//}
 	//fmt.Println(response.Msg, response.Code)
 	//chapterInfo, err := study.ChapterInfo(httpClient, map[string]string{
-	//	"user_id":   User.Id,
-	//	"token":     User.Token,
+	//	"user_id":   "208819",
+	//	"token":     "e6ea282a986eed7c3c6ce7a5a4f796b4",
 	//	"platform":  platformType,
-	//	"imei":      deviceImei,
+	//	"imei":      "17364963500309581258",
 	//	"timestamp": utils.GetReqTime(),
-	//	"course_id": "240746",
+	//	"course_id": "245275",
 	//})
 	//if err != nil {
 	//	fmt.Println(err.Error())
@@ -205,21 +205,48 @@ func main() {
 	//	return
 	//}
 	//fmt.Println("提交学习记录:", responseRecord.Code, responseRecord.Msg)
+
 	// TODO 提交学习进度
 	//response, err := face.DurationFace(httpClient, map[string]string{
-	//	"user_id":   UserId,
-	//	"token":     Token,
+	//	"user_id":   User.Id,
+	//	"token":     User.Token,
 	//	"platform":  platformType,
 	//	"imei":      deviceImei,
 	//	"timestamp": utils.GetReqTime(),
 	//	"record_id": chapterInfo.StudyRecordId,
-	//	"duration":  "1860",
+	//	"duration":  chapterInfo.SrDuration,
 	//})
 	//if err != nil {
 	//	println(err.Error())
 	//	return
 	//}
 	//var faceDuration types.FaceDuration
+	//err = utils.JsonUnmarshal(utils.JsonMarshal(response.Data), &faceDuration)
+	//if err != nil {
+	//	println(err.Error())
+	//	return
+	//}
+	//Base64Str, err := utils.ImageToBase64("/Users/mac/go/aqscwlxy/demo/output_0005.jpg")
+	//if err != nil {
+	//	fmt.Println("转换图片失败", err.Error())
+	//	return
+	//}
+	//fmt.Println("人脸认证位置:", faceDuration.StudyRecordId, faceDuration.Duration, faceDuration.AuthFaceCount, faceDuration.IsVerification, faceDuration.StudyRecordFaceId)
+	//response, err = face.StudyFace(httpClient, map[string]string{
+	//	"user_id":   User.Id,
+	//	"token":     User.Token,
+	//	"platform":  platformType,
+	//	"imei":      deviceImei,
+	//	"timestamp": utils.GetReqTime(),
+	//	"record_id": chapterInfo.StudyRecordId,
+	//	"image":     fmt.Sprintf("data:image/jpeg;base64,%s", Base64Str),
+	//	"duration":  chapterInfo.SrDuration,
+	//	"face_id":   fmt.Sprintf("%d", faceDuration.StudyRecordFaceId),
+	//})
+	//if err != nil {
+	//	fmt.Println("人脸认证失败", err.Error())
+	//	return
+	//}
 	//fmt.Println(response.Msg, response.Code)
 	//if response.Code == 208 {
 	//	if response.Msg == "该视频已看完，请按要求继续学习！" {
@@ -246,53 +273,53 @@ func main() {
 	//}
 	//fmt.Println("人脸认证位置:", faceDuration.StudyRecordId, faceDuration.Duration, faceDuration.AuthFaceCount, faceDuration.IsVerification, faceDuration.StudyRecordFaceId)
 	// TODO 查询需要考试的章节
-	//section, err := study.NeedExamChapter(httpClient, map[string]string{
-	//	"user_id":   User.Id,
-	//	"token":     User.Token,
-	//	"platform":  platformType,
-	//	"imei":      deviceImei,
-	//	"timestamp": utils.GetReqTime(),
-	//	"course_id": "240746",
-	//})
-	//if err != nil {
-	//	println(err.Error())
-	//	return
-	//}
-	//if section.StudyRecordId == "" {
-	//	fmt.Println("章节信息为空")
-	//	return
-	//}
-	//fmt.Println("章节信息:", section.StudyRecordId, section.Name)
-	//// 获取考试题目列表
-	//examList, err := study.ExamList(httpClient, map[string]string{
-	//	"user_id":   User.Id,
-	//	"token":     User.Token,
-	//	"platform":  platformType,
-	//	"imei":      deviceImei,
-	//	"timestamp": utils.GetReqTime(),
-	//	"record_id": section.StudyRecordId,
-	//})
-	//if err != nil {
-	//	println(err.Error())
-	//	return
-	//}
-	//// 声明一个切片，用于存储提交的题目
-	//items := utils.GetSubject(examList)
-	//examPost := map[string]string{
-	//	"user_id":   User.Id,
-	//	"token":     User.Token,
-	//	"platform":  platformType,
-	//	"imei":      deviceImei,
-	//	"timestamp": utils.GetReqTime(),
-	//	"record_id": section.StudyRecordId,
-	//	"data":      string(utils.JsonMarshal(items)),
-	//}
-	//examBody, err := study.SubmitExam(httpClient, examPost)
-	//if err != nil {
-	//	println(err.Error())
-	//	return
-	//}
-	//fmt.Println("提交考试结果:", examBody.Code, examBody.Msg)
+	section, err := study.NeedExamChapter(httpClient, map[string]string{
+		"user_id":   User.Id,
+		"token":     User.Token,
+		"platform":  platformType,
+		"imei":      deviceImei,
+		"timestamp": utils.GetReqTime(),
+		"course_id": "240746",
+	})
+	if err != nil {
+		println(err.Error())
+		return
+	}
+	if section.StudyRecordId == "" {
+		fmt.Println("章节信息为空")
+		return
+	}
+	fmt.Println("章节信息:", section.StudyRecordId, section.Name)
+	// 获取考试题目列表
+	examList, err := study.ExamList(httpClient, map[string]string{
+		"user_id":   User.Id,
+		"token":     User.Token,
+		"platform":  platformType,
+		"imei":      deviceImei,
+		"timestamp": utils.GetReqTime(),
+		"record_id": section.StudyRecordId,
+	})
+	if err != nil {
+		println(err.Error())
+		return
+	}
+	// 声明一个切片，用于存储提交的题目
+	items := utils.GetSubject(examList)
+	examPost := map[string]string{
+		"user_id":   User.Id,
+		"token":     User.Token,
+		"platform":  platformType,
+		"imei":      deviceImei,
+		"timestamp": utils.GetReqTime(),
+		"record_id": section.StudyRecordId,
+		"data":      string(utils.JsonMarshal(items)),
+	}
+	examBody, err := study.SubmitExam(httpClient, examPost)
+	if err != nil {
+		println(err.Error())
+		return
+	}
+	fmt.Println("提交考试结果:", examBody.Code, examBody.Msg)
 	//coursePost := map[string]string{
 	//	"user_id":   User.Id,
 	//	"token":     User.Token,

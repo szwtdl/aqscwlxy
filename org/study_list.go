@@ -31,6 +31,9 @@ func CourseList(client *utils.HttpClient, data map[string]string) ([]types.Cours
 	if err != nil {
 		return nil, err
 	}
+	if responseApi.Code != 200 {
+		return nil, errors.New(responseApi.Msg)
+	}
 	var courseList []types.Course
 	err = utils.JsonUnmarshal(utils.JsonMarshal(responseApi.Data), &courseList)
 	if err != nil {

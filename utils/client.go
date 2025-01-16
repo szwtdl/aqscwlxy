@@ -86,6 +86,9 @@ func (h *HttpClient) doRequest(req *http.Request) ([]byte, error) {
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("读取失败: %s", err.Error()))
 	}
+	if res.StatusCode != http.StatusOK {
+		return nil, errors.New(fmt.Sprintf("请求失败: %s", body))
+	}
 	return body, nil
 }
 

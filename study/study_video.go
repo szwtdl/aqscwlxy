@@ -38,6 +38,9 @@ func ChapterList(client *utils.HttpClient, data map[string]string) ([]types.Chap
 	if err != nil {
 		return nil, err
 	}
+	if responseApi.Code != 200 {
+		return nil, errors.New(responseApi.Msg)
+	}
 	var chapterList []types.Chapter
 	err = utils.JsonUnmarshal(utils.JsonMarshal(responseApi.Data), &chapterList)
 	if err != nil {
@@ -76,6 +79,9 @@ func ChapterInfo(client *utils.HttpClient, data map[string]string) (types.Sectio
 	if err != nil {
 		return types.Section{}, errors.New("解析响应失败")
 	}
+	if responseApi.Code != 200 {
+		return types.Section{}, errors.New(responseApi.Msg)
+	}
 	var chapterList []types.Chapter
 	err = utils.JsonUnmarshal(utils.JsonMarshal(responseApi.Data), &chapterList)
 	if err != nil {
@@ -84,7 +90,8 @@ func ChapterInfo(client *utils.HttpClient, data map[string]string) (types.Sectio
 	for _, chapter := range chapterList {
 		for _, section := range chapter.List {
 			SpeedOfProgress, _ := utils.RemovePercentAndConvert(section.SpeedOfProgress)
-			if SpeedOfProgress < 100 {
+			//fmt.Println(fmt.Sprintf("章节：%s, 进度：%d", section.Name, SpeedOfProgress))
+			if SpeedOfProgress < 100 || SpeedOfProgress == 100 && section.IsComplete == "0" {
 				return section, nil
 			}
 		}
@@ -120,6 +127,9 @@ func NeedExamChapter(client *utils.HttpClient, data map[string]string) (types.Se
 	err = utils.JsonUnmarshal(response, &responseApi)
 	if err != nil {
 		return types.Section{}, err
+	}
+	if responseApi.Code != 200 {
+		return types.Section{}, errors.New(responseApi.Msg)
 	}
 	var chapterList []types.Chapter
 	err = utils.JsonUnmarshal(utils.JsonMarshal(responseApi.Data), &chapterList)
@@ -167,6 +177,9 @@ func ExamList(client *utils.HttpClient, data map[string]string) ([]types.Exam, e
 	if err != nil {
 		return nil, err
 	}
+	if responseApi.Code != 200 {
+		return nil, errors.New(responseApi.Msg)
+	}
 	var examList []types.Exam
 	err = utils.JsonUnmarshal(utils.JsonMarshal(responseApi.Data), &examList)
 	if err != nil {
@@ -209,7 +222,6 @@ func SubmitExam(client *utils.HttpClient, data map[string]string) (types.Respons
 		postData[fmt.Sprintf("data[%d][id]", i)] = item["id"]
 		postData[fmt.Sprintf("data[%d][value]", i)] = item["value"]
 	}
-
 	response, err := client.DoPost("study/subject_complete.php", postData)
 	if err != nil {
 		return types.ResponseApi{}, err
@@ -218,6 +230,9 @@ func SubmitExam(client *utils.HttpClient, data map[string]string) (types.Respons
 	err = utils.JsonUnmarshal(response, &responseApi)
 	if err != nil {
 		return types.ResponseApi{}, err
+	}
+	if responseApi.Code != 200 {
+		return types.ResponseApi{}, errors.New(responseApi.Msg)
 	}
 	return responseApi, nil
 }
@@ -254,6 +269,9 @@ func SwitchVideo(client *utils.HttpClient, data map[string]string) (types.Respon
 	if err != nil {
 		return types.ResponseApi{}, err
 	}
+	if responseApi.Code != 200 {
+		return responseApi, errors.New(responseApi.Msg)
+	}
 	return responseApi, nil
 }
 
@@ -288,6 +306,9 @@ func SubmitRecord(client *utils.HttpClient, data map[string]string) (types.Respo
 	if err != nil {
 		return types.ResponseApi{}, err
 	}
+	if responseApi.Code != 200 {
+		return responseApi, errors.New(responseApi.Msg)
+	}
 	return responseApi, nil
 }
 
@@ -320,6 +341,9 @@ func CheckRecord(client *utils.HttpClient, data map[string]string) (types.Respon
 	if err != nil {
 		return types.ResponseApi{}, err
 	}
+	if responseApi.Code != 200 {
+		return responseApi, errors.New(responseApi.Msg)
+	}
 	return responseApi, nil
 }
 
@@ -351,6 +375,9 @@ func RecordResult(client *utils.HttpClient, data map[string]string) (types.Respo
 	err = utils.JsonUnmarshal(response, &responseApi)
 	if err != nil {
 		return types.ResponseApi{}, err
+	}
+	if responseApi.Code != 200 {
+		return responseApi, errors.New(responseApi.Msg)
 	}
 	return responseApi, nil
 }

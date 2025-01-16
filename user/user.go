@@ -82,6 +82,9 @@ func ResetPass(client *utils.HttpClient, data map[string]string) (types.Response
 	if err != nil {
 		return types.ResponseApi{}, err
 	}
+	if responseApi.Code != 200 {
+		return types.ResponseApi{}, errors.New(responseApi.Msg)
+	}
 	return responseApi, nil
 }
 
@@ -113,6 +116,9 @@ func CheckAuth(client *utils.HttpClient, data map[string]string) (types.Response
 	if err != nil {
 		return types.ResponseApi{}, err
 	}
+	if responseApi.Code != 200 {
+		return types.ResponseApi{}, errors.New(responseApi.Msg)
+	}
 	return responseApi, nil
 }
 
@@ -142,6 +148,9 @@ func CheckToken(client *utils.HttpClient, data map[string]string) (types.Respons
 	err = utils.JsonUnmarshal(response, &responseApi)
 	if err != nil {
 		return types.ResponseApi{}, err
+	}
+	if responseApi.Code != 200 {
+		return types.ResponseApi{}, errors.New(responseApi.Msg)
 	}
 	return responseApi, nil
 }

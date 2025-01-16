@@ -1,6 +1,8 @@
 package face
 
 import (
+	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/szwtdl/aqscwlxy/types"
 	"github.com/szwtdl/aqscwlxy/utils"
@@ -37,6 +39,9 @@ func DurationFace(client *utils.HttpClient, data map[string]string) (types.Respo
 	if err != nil {
 		return types.ResponseApi{}, err
 	}
+	if responseApi.Code != 200 {
+		return types.ResponseApi{}, fmt.Errorf(responseApi.Msg)
+	}
 	return responseApi, nil
 }
 
@@ -55,7 +60,7 @@ func StudyFace(client *utils.HttpClient, data map[string]string) (types.Response
 		"imei":                data["imei"],
 		"t":                   data["timestamp"],
 	})
-	response, err := client.DoPost("study/face_study.php", map[string]string{
+	response, err := client.DoPost("face/study_face.php", map[string]string{
 		"studyrecord_id":      data["record_id"],
 		"base64_image":        data["image"],
 		"duration":            data["duration"],
@@ -70,12 +75,15 @@ func StudyFace(client *utils.HttpClient, data map[string]string) (types.Response
 		"token":               data["token"],
 	})
 	if err != nil {
-		return types.ResponseApi{}, err
+		return types.ResponseApi{}, errors.New("服务端错误")
 	}
 	var responseApi types.ResponseApi
-	err = utils.JsonUnmarshal(response, &responseApi)
+	err = json.Unmarshal(response, &responseApi)
 	if err != nil {
-		return types.ResponseApi{}, err
+		return types.ResponseApi{}, errors.New("解析数据失败:" + err.Error())
+	}
+	if responseApi.Code != 200 {
+		return types.ResponseApi{}, errors.New("人脸认证失败:" + responseApi.Msg)
 	}
 	return responseApi, nil
 }
@@ -117,6 +125,9 @@ func AuthFace(client *utils.HttpClient, data map[string]string) (types.ResponseA
 	if err != nil {
 		return types.ResponseApi{}, err
 	}
+	if responseApi.Code != 200 {
+		return types.ResponseApi{}, fmt.Errorf(responseApi.Msg)
+	}
 	return responseApi, nil
 }
 
@@ -143,6 +154,9 @@ func UploadFace(client *utils.HttpClient, data map[string]string) (types.Respons
 	err = utils.JsonUnmarshal(response, &responseApi)
 	if err != nil {
 		return types.ResponseApi{}, err
+	}
+	if responseApi.Code != 200 {
+		return types.ResponseApi{}, fmt.Errorf(responseApi.Msg)
 	}
 	return responseApi, nil
 }

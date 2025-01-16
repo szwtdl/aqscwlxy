@@ -139,6 +139,7 @@ func GetSign(postData map[string]interface{}) string {
 	}
 	// 拼接盐值
 	tmpSign := sortedValues.String() + "8d387869d4c9eb0fe3b338a8c096324e"
+	fmt.Println("tmpSign:", tmpSign)
 	// 计算 MD5 哈希值
 	hash := md5.Sum([]byte(tmpSign))
 	return hex.EncodeToString(hash[:])
@@ -206,16 +207,37 @@ func JsonMarshal(v interface{}) []byte {
 
 // 将接口类型转换为字符串
 
+//func ToString(value interface{}) string {
+//	switch v := value.(type) {
+//	case string:
+//		return v
+//	case int, int8, int16, int32, int64:
+//		return strings.TrimSpace(fmt.Sprintf("%d", v))
+//	case float32, float64:
+//		return strings.TrimSpace(fmt.Sprintf("%f", v))
+//	default:
+//		return ""
+//	}
+//}
+
 func ToString(value interface{}) string {
+	return fmt.Sprintf("%v", value)
+}
+
+func ToInt(value interface{}) (int, error) {
 	switch v := value.(type) {
 	case string:
-		return v
+		if floatVal, err := strconv.ParseFloat(v, 64); err == nil {
+			// 将字符串解析为 float64，再转为 int
+			return int(floatVal), nil
+		}
+		return strconv.Atoi(v)
 	case int, int8, int16, int32, int64:
-		return strings.TrimSpace(fmt.Sprintf("%d", v))
+		return v.(int), nil
 	case float32, float64:
-		return strings.TrimSpace(fmt.Sprintf("%f", v))
+		return int(v.(float64)), nil
 	default:
-		return ""
+		return 0, fmt.Errorf("invalid type")
 	}
 }
 
