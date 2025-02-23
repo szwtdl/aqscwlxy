@@ -4,11 +4,12 @@ import (
 	"errors"
 	"github.com/szwtdl/aqscwlxy/types"
 	"github.com/szwtdl/aqscwlxy/utils"
+	"github.com/szwtdl/req"
 )
 
 // 账号登录
 
-func Login(client *utils.HttpClient, data map[string]string) (types.User, error) {
+func Login(client *client.HttpClient, data map[string]string) (types.User, error) {
 	sign := utils.GetSign(map[string]interface{}{
 		"account_number": data["username"],
 		"password":       data["password"],
@@ -47,7 +48,7 @@ func Login(client *utils.HttpClient, data map[string]string) (types.User, error)
 
 // 重置密码
 
-func ResetPass(client *utils.HttpClient, data map[string]string) (types.ResponseApi, error) {
+func ResetPass(client *client.HttpClient, data map[string]string) (types.ResponseApi, error) {
 	sign := utils.GetSign(map[string]interface{}{
 		"name":             data["nickname"],
 		"idcard":           data["username"],
@@ -90,7 +91,7 @@ func ResetPass(client *utils.HttpClient, data map[string]string) (types.Response
 
 // 检查是否认证,如果是302，代表需要认证
 
-func CheckAuth(client *utils.HttpClient, data map[string]string) (types.ResponseApi, error) {
+func CheckAuth(client *client.HttpClient, data map[string]string) (types.ResponseApi, error) {
 	sign := utils.GetSign(map[string]interface{}{
 		"platform": data["platform"],
 		"zx_code":  "",
@@ -124,7 +125,7 @@ func CheckAuth(client *utils.HttpClient, data map[string]string) (types.Response
 
 // 检查token，是否过期
 
-func CheckToken(client *utils.HttpClient, data map[string]string) (types.ResponseApi, error) {
+func CheckToken(client *client.HttpClient, data map[string]string) (types.ResponseApi, error) {
 	sign := utils.GetSign(map[string]interface{}{
 		"platform": data["platform"],
 		"zx_code":  "",

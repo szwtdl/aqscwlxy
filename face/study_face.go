@@ -6,11 +6,12 @@ import (
 	"fmt"
 	"github.com/szwtdl/aqscwlxy/types"
 	"github.com/szwtdl/aqscwlxy/utils"
+	"github.com/szwtdl/req"
 )
 
 // 返回待认证数据
 
-func DurationFace(client *utils.HttpClient, data map[string]string) (types.ResponseApi, error) {
+func DurationFace(client *client.HttpClient, data map[string]string) (types.ResponseApi, error) {
 	sign := utils.GetSign(map[string]interface{}{
 		"studyrecord_id": data["record_id"],
 		"duration":       data["duration"],
@@ -47,7 +48,7 @@ func DurationFace(client *utils.HttpClient, data map[string]string) (types.Respo
 
 //  人脸认证
 
-func StudyFace(client *utils.HttpClient, data map[string]string) (types.ResponseApi, error) {
+func StudyFace(client *client.HttpClient, data map[string]string) (types.ResponseApi, error) {
 	sign := utils.GetSign(map[string]interface{}{
 		"studyrecord_id":      data["record_id"],
 		"base64_image":        data["image"],
@@ -90,7 +91,7 @@ func StudyFace(client *utils.HttpClient, data map[string]string) (types.Response
 
 // 首次认证头像
 
-func AuthFace(client *utils.HttpClient, data map[string]string) (types.ResponseApi, error) {
+func AuthFace(client *client.HttpClient, data map[string]string) (types.ResponseApi, error) {
 	sign := utils.GetSign(map[string]interface{}{
 		"studyrecord_id":      data["record_id"],
 		"base64_image":        data["image"],
@@ -133,7 +134,7 @@ func AuthFace(client *utils.HttpClient, data map[string]string) (types.ResponseA
 
 // 实名认证
 
-func UploadFace(client *utils.HttpClient, data map[string]string) (types.ResponseApi, error) {
+func UploadFace(client *client.HttpClient, data map[string]string) (types.ResponseApi, error) {
 	postData := map[string]string{
 		"id":        data["user_id"],
 		"token":     data["token"],

@@ -6,11 +6,12 @@ import (
 	"fmt"
 	"github.com/szwtdl/aqscwlxy/types"
 	"github.com/szwtdl/aqscwlxy/utils"
+	client "github.com/szwtdl/req"
 )
 
 // 章节列表
 
-func ChapterList(client *utils.HttpClient, data map[string]string) ([]types.Chapter, error) {
+func ChapterList(client *client.HttpClient, data map[string]string) ([]types.Chapter, error) {
 	post := map[string]interface{}{
 		"platform":        data["platform"],
 		"zx_code":         "",
@@ -51,7 +52,7 @@ func ChapterList(client *utils.HttpClient, data map[string]string) ([]types.Chap
 
 // 章节详情
 
-func ChapterInfo(client *utils.HttpClient, data map[string]string) (types.Section, error) {
+func ChapterInfo(client *client.HttpClient, data map[string]string) (types.Section, error) {
 	post := map[string]interface{}{
 		"platform":        data["platform"],
 		"zx_code":         "",
@@ -101,7 +102,7 @@ func ChapterInfo(client *utils.HttpClient, data map[string]string) (types.Sectio
 
 // 需要考试的章节
 
-func NeedExamChapter(client *utils.HttpClient, data map[string]string) (types.Section, error) {
+func NeedExamChapter(client *client.HttpClient, data map[string]string) (types.Section, error) {
 	sign := utils.GetSign(map[string]interface{}{
 		"platform":        data["platform"],
 		"zx_code":         "",
@@ -149,7 +150,7 @@ func NeedExamChapter(client *utils.HttpClient, data map[string]string) (types.Se
 
 // 题目列表
 
-func ExamList(client *utils.HttpClient, data map[string]string) ([]types.Exam, error) {
+func ExamList(client *client.HttpClient, data map[string]string) ([]types.Exam, error) {
 	post := map[string]interface{}{
 		"platform":       data["platform"],
 		"zx_code":        "",
@@ -190,7 +191,7 @@ func ExamList(client *utils.HttpClient, data map[string]string) ([]types.Exam, e
 
 // 提交题目
 
-func SubmitExam(client *utils.HttpClient, data map[string]string) (types.ResponseApi, error) {
+func SubmitExam(client *client.HttpClient, data map[string]string) (types.ResponseApi, error) {
 	sign := utils.GetSign(map[string]interface{}{
 		"studyrecord_id": data["record_id"],
 		"platform":       data["platform"],
@@ -239,7 +240,7 @@ func SubmitExam(client *utils.HttpClient, data map[string]string) (types.Respons
 
 // 视频进度
 
-func SwitchVideo(client *utils.HttpClient, data map[string]string) (types.ResponseApi, error) {
+func SwitchVideo(client *client.HttpClient, data map[string]string) (types.ResponseApi, error) {
 	post := map[string]interface{}{
 		"studyrecord_id": data["record_id"],
 		"duration":       data["duration"],
@@ -277,7 +278,7 @@ func SwitchVideo(client *utils.HttpClient, data map[string]string) (types.Respon
 
 // 提交学习记录
 
-func SubmitRecord(client *utils.HttpClient, data map[string]string) (types.ResponseApi, error) {
+func SubmitRecord(client *client.HttpClient, data map[string]string) (types.ResponseApi, error) {
 	sign := utils.GetSign(map[string]interface{}{
 		"platform":       data["platform"],
 		"zx_code":        "",
@@ -314,7 +315,7 @@ func SubmitRecord(client *utils.HttpClient, data map[string]string) (types.Respo
 
 // 检查学习记录
 
-func CheckRecord(client *utils.HttpClient, data map[string]string) (types.ResponseApi, error) {
+func CheckRecord(client *client.HttpClient, data map[string]string) (types.ResponseApi, error) {
 	sign := utils.GetSign(map[string]interface{}{
 		"classstudent_id": data["course_id"],
 		"zx_code":         "",
@@ -349,7 +350,7 @@ func CheckRecord(client *utils.HttpClient, data map[string]string) (types.Respon
 
 // 检查人脸结果
 
-func RecordResult(client *utils.HttpClient, data map[string]string) (types.ResponseApi, error) {
+func RecordResult(client *client.HttpClient, data map[string]string) (types.ResponseApi, error) {
 	sign := utils.GetSign(map[string]interface{}{
 		"studyrecord_id": data["record_id"],
 		"platform":       data["platform"],

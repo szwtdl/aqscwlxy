@@ -4,9 +4,10 @@ import (
 	"errors"
 	"github.com/szwtdl/aqscwlxy/types"
 	"github.com/szwtdl/aqscwlxy/utils"
+	"github.com/szwtdl/req"
 )
 
-func CourseList(client *utils.HttpClient, data map[string]string) ([]types.Course, error) {
+func CourseList(client *client.HttpClient, data map[string]string) ([]types.Course, error) {
 	sign := utils.GetSign(map[string]interface{}{
 		"platform": data["platform"],
 		"zx_code":  "",
@@ -44,7 +45,7 @@ func CourseList(client *utils.HttpClient, data map[string]string) ([]types.Cours
 
 // 课程详情
 
-func CourseInfo(client *utils.HttpClient, data map[string]string) (types.CourseDetail, error) {
+func CourseInfo(client *client.HttpClient, data map[string]string) (types.CourseDetail, error) {
 	post := map[string]interface{}{
 		"platform":        data["platform"],
 		"zx_code":         "",
