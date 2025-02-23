@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 )
@@ -82,7 +81,7 @@ func (h *HttpClient) doRequest(req *http.Request) ([]byte, error) {
 	defer func(Body io.ReadCloser) {
 		_ = Body.Close()
 	}(res.Body)
-	body, err := ioutil.ReadAll(res.Body)
+	body, err := io.ReadAll(res.Body)
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("读取失败: %s", err.Error()))
 	}

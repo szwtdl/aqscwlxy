@@ -147,7 +147,7 @@ func CheckToken(client *utils.HttpClient, data map[string]string) (types.Respons
 	var responseApi types.ResponseApi
 	err = utils.JsonUnmarshal(response, &responseApi)
 	if err != nil {
-		return types.ResponseApi{}, err
+		return types.ResponseApi{}, errors.New("解析json失败")
 	}
 	if responseApi.Code != 200 {
 		return types.ResponseApi{}, errors.New(responseApi.Msg)

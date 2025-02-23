@@ -122,7 +122,6 @@ func GetSign(postData map[string]interface{}) string {
 		value := strings.ReplaceAll(fmt.Sprintf("%v", v), " ", "")
 		cleanData[key] = value
 	}
-
 	// 按键名排序（忽略大小写）
 	keys := make([]string, 0, len(cleanData))
 	for k := range cleanData {
@@ -131,7 +130,6 @@ func GetSign(postData map[string]interface{}) string {
 	sort.Slice(keys, func(i, j int) bool {
 		return strings.ToLower(keys[i]) < strings.ToLower(keys[j])
 	})
-
 	// 按排序后的键连接对应的值
 	var sortedValues strings.Builder
 	for _, key := range keys {
@@ -139,7 +137,6 @@ func GetSign(postData map[string]interface{}) string {
 	}
 	// 拼接盐值
 	tmpSign := sortedValues.String() + "8d387869d4c9eb0fe3b338a8c096324e"
-	fmt.Println("tmpSign:", tmpSign)
 	// 计算 MD5 哈希值
 	hash := md5.Sum([]byte(tmpSign))
 	return hex.EncodeToString(hash[:])
